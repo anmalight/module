@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+        <div>
+            {% if request.user.is_authenticated %}
+
+                {% for obj in purchase %}
+                    <div>Name: {{ obj.info_about_good.title }}</div>
+
+                    <form action="{% url 'return_new' %}" method="post">
+                    {% csrf_token %}
+                        {{ new_return.info_about_purchase.quantity_of_goods }}
+                    <input type="text" value={{ obj.pk }} name='current_purchase' readonly>
+                    <input type="submit" value="Return request">
+                    </form>
+
+                {% endfor %}
+
+            {% else %}
+            <p>Access denied</p>
+            {% endif %}
+        </div>
+
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/page{{ page_obj.previous_page_number }}/">&larr;</a>
+        {% endif %}
+        <span class="current_page">{{ paginator.number }}</span>
+        {% if page_obj.has_next %}
+            <a href="/page{{ page_obj.next_page_number }}">&rarr;</a>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

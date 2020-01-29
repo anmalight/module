@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        {#    Welcome{{ user.first_name }}. You have {{ user.wallet }} bonus units in your account.#}
+    {% endif %}
+    {% for good in object_list %}
+
+        <div>
+
+            <div>Name: {{ good.title }}</div>
+            <div>Description: {{ good.description }}</div>
+            <div>Amount: {{ good.in_stock }}</div>
+            <div>{{ good.photo }}</div>
+            <div>Price:{{ good.price }}</div>
+            {% if request.user.is_authenticated %}
+                <div>
+                    <form method="post" action="{% url 'purchase_new' good.pk %}">
+                        {% csrf_token %}
+{#                        {{ new_purchase_form.quantity_of_goods }}#}
+                        {{ new_purchase_form }}
+                        <input type="submit" value="Buy">
+                    </form>
+{#                    <a style="color: red" href={% url 'purchase_new' good.pk %}>Buy</a>#}
+                </div>
+            {% endif %}
+
+            {% if request.user.is_superuser %}
+                <a style="color: red" href={% url 'update_good' good.id %}>Update good</a>
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/page{{ page_obj.previous_page_number }}/">&larr;</a>
+        {% endif %}
+        <span class="current_page">{{ paginator.number }}</span>
+        {% if page_obj.has_next %}
+            <a href="/page{{ page_obj.next_page_number }}">&rarr;</a>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

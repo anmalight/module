@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+        <div>
+            {% if request.user.is_superuser %}
+                {% for return in object_list %}
+                <p>Return number {{ return.id }} ({{ return.info_about_purchase.info_about_customer.first_name }} - {{ return.info_about_purchase.info_about_good.title }} - {{ return.time_of_return }})</p>
+                    <p>Choose action:</p>
+
+                    <form action="{% url 'accept_return' return.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Accept return request">
+                    </form>
+
+                    <form action="{% url 'delete_return' return.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Delete return request">
+                    </form>
+                {% endfor %}
+
+
+            {% else %}
+            <p>Access denied</p>
+            {% endif %}
+        </div>
+
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/page{{ page_obj.previous_page_number }}/">&larr;</a>
+        {% endif %}
+        <span class="current_page">{{ paginator.number }}</span>
+        {% if page_obj.has_next %}
+            <a href="/page{{ page_obj.next_page_number }}">&rarr;</a>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}
