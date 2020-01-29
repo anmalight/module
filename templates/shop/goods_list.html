@@ -12,6 +12,8 @@
             <div>Description: {{ good.description }}</div>
             <div>Amount: {{ good.in_stock }}</div>
             <div>{{ good.photo }}</div>
+            <div><img src="{{ good.photo }}"></div>
+{#            <div>{{ good.photo.url }}</div>#}
             <div>Price:{{ good.price }}</div>
             {% if request.user.is_authenticated %}
                 <div>
